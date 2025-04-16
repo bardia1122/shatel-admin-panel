@@ -77,3 +77,13 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+@font-face {
+  font-family: 'BNazanin';
+  src: url('/fonts/BNazanin.woff2') format('woff2');
+  font-weight: bold;
+  font-style: normal;
+}
+
+body {
+  font-family: 'B Nazanin', sans-serif;
+}

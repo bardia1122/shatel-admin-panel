@@ -31,6 +31,7 @@ export default {
             username: this.username,
             password: this.password
             }))
+            localStorage.setItem('token', response.data.access_token)
             this.$router.push('/dashboard') // redirect
         } catch (err) {
             this.error = err.response?.data?.detail || 'Login failed'

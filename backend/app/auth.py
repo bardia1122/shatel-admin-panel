@@ -3,25 +3,22 @@ from fastapi.responses import JSONResponse
 from passlib.hash import bcrypt
 from jose import jwt
 from datetime import datetime, timedelta
+import psycopg2
+import json
+from app.postgres_database import add_user
 
 router = APIRouter()
+
 SECRET_KEY = "shatel-super-secret"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60
 
-fake_users_db = {
-    "admin": {
-        "username": "admin",
-        "hashed_password": bcrypt.hash("admin123"),
-        "roles": ["admin"],
-        "permissions": ["view_logs", "access_db", "manage_data"]
-    },
-    "viewer": {
-        "username": "viewer",
-        "hashed_password": bcrypt.hash("viewer123"),
-        "roles": ["viewer"],
-        "permissions": ["view_logs"]
-    }
+DB_CONFIG = {
+    "dbname": "postgres",
+    "user": "myuser",
+    "password": "mypassword",
+    "host": "localhost",
+    "port": "5432"
 }
 
 def create_access_token(data: dict):
@@ -30,9 +27,28 @@ def create_access_token(data: dict):
     to_encode.update({"exp": expire})
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
 
+def get_user_from_db(username: str):
+    conn = psycopg2.connect(**DB_CONFIG)
+    cur = conn.cursor()
+    try:
+        cur.execute("SELECT username, password, role, permissions FROM users WHERE username = %s", (username,))
+        row = cur.fetchone()
+        if row:
+            return {
+                "username": row[0],
+                "hashed_password": row[1],
+                "roles": [row[2]],
+                "permissions": json.loads(row[3])
+            }
+    finally:
+        cur.close()
+        conn.close()
+    return None
+
 @router.post("/login")
 def login(username: str = Form(...), password: str = Form(...)):
-    user = fake_users_db.get(username)
+    user = get_user_from_db(username)
+    print(user)
     if not user or not bcrypt.verify(password, user["hashed_password"]):
         raise HTTPException(status_code=401, detail="Invalid credentials")
     
@@ -41,4 +57,35 @@ def login(username: str = Form(...), password: str = Form(...)):
         "roles": user["roles"],
         "permissions": user["permissions"]
     })
+    print(user["permissions"])
     return JSONResponse(content={"access_token": token, "token_type": "bearer"})
+@router.post("/register")
+def register(
+    username: str = Form(...),
+    password: str = Form(...),
+    role: str = Form(...),
+    permissions: str = Form(...)  # comma-separated
+):
+    # Check if user exists first
+    conn = psycopg2.connect(
+        dbname="postgres",
+        user="myuser",
+        password="mypassword",
+        host="localhost",
+        port="5432"
+    )
+    cur = conn.cursor()
+    try:
+        cur.execute("SELECT 1 FROM users WHERE username = %s", (username,))
+        if cur.fetchone():
+            raise HTTPException(status_code=400, detail="Username already exists")
+    finally:
+        cur.close()
+        conn.close()
+
+    try:
+        perm_list = [perm.strip() for perm in permissions.split(",")]
+        add_user(username, password, role, perm_list)
+        return {"msg": "User registered successfully."}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Registration failed: {e}")

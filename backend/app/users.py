@@ -7,14 +7,18 @@ router = APIRouter()
 def view_logs(permission = Depends(has_permission("view_logs"))):
     return {"msg": "User Level 3 can view logs."}
 
-@router.get("/access-db")
+@router.get("/access_db")
 def access_db(permission = Depends(has_permission("access_db"))):
     return {"msg": "User can access database"}
 
-@router.get("/manage-data")
+@router.get("/manage_data")
 def admin_zone(permission = Depends(has_permission("manage_data"))):
     return {"msg": "Entering manage data"}
 
-@router.get("/access-kb")
-def admin_zone(permission = Depends(has_permission("access-kb"))):
+@router.get("/access_kb")
+def access_kb(permission = Depends(has_permission("access_kb"))):
     return {"msg": "Access to Knowledge Base"}
+
+@router.get("/dashboard")
+def access_kb():
+    return {"msg": "Dashboard"}

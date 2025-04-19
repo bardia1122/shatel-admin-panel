@@ -1,82 +1,101 @@
-<script setup>
-import { useRouter } from 'vue-router'
-import config from '../config/featureConfig'
-
-const router = useRouter()
-const buttons = config.buttons.filter(btn => btn.enabled)
-
-const navigate = (route) => {
-  router.push(route)
-}
-
-</script>
-
 <template>
-    <div class="dashboard-container">
-      <div class="grid-and-text">
-        <div class="button-grid">
-          <button v-for="btn in buttons" :key="btn.key" @click="navigate(btn.route)">
+  <div class="dashboard-container">
+    <!-- Sidebar -->
+    <div :class="['sidebar', { collapsed: !sidebarOpen }]">
+      <div class="sidebar-toggle" @click="toggleSidebar">☰</div>
+
+      <transition name="fade-slide">
+        <div v-if="sidebarOpen" class="button-list">
+          <button :class="{'active': true}" @click="handleDashboard">داشبورد</button>
+          <button
+            v-for="btn in buttons"
+            :key="btn.key"
+            @click="navigate(btn.route)"
+          >
             {{ btn.label }}
           </button>
+          <button class="logout-btn" @click="handleLogout">خروج</button>
         </div>
-        <div class="welcome-text">
-          <h1>به پنل ادمین خوش آمدید</h1>
-        </div>
-      </div>
+      </transition>
     </div>
-  </template>
 
-  
-  <style scoped>
-  .dashboard-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background: white;
-    font-family: 'B Nazanin', sans-serif;
+    <!-- Main content -->
+    <div class="main-content">
+      <h1>{{ greetingMessage }}</h1> <!-- نمایش پیام خوشامدگویی -->
+    </div>
+    
+    <div class="main-content">
+      <h2>به پنل ادمین خوش آمدید</h2> <!-- نمایش پیام خوشامدگویی -->
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import config from '../config/featureConfig'
+import axios from 'axios'
+
+const router = useRouter()
+const sidebarOpen = ref(true)
+const buttons = config.buttons.filter(btn => btn.enabled)
+
+const greetingMessage = ref('')
+
+const setGreetingMessage = () => {
+  const hours = new Date().getHours()
+
+  if (hours >= 5 && hours < 12) {
+    greetingMessage.value = 'سلام! صبح بخیر'
+  } else if (hours >= 12 && hours < 17) {
+    greetingMessage.value = 'سلام! ظهر بخیر'
+  } else if (hours >= 17 && hours < 20) {
+    greetingMessage.value = 'سلام! عصر بخیر'
+  } else {
+    greetingMessage.value = 'سلام! شب بخیر'
   }
-  
-  .grid-and-text {
-    display: flex;
-    gap: 4rem;
-    align-items: center;
+}
+
+setGreetingMessage()
+
+const handleLogout = () => {
+  localStorage.removeItem("access_token")
+  localStorage.removeItem("token")
+  window.location.href = "/login"
+}
+
+const toggleSidebar = () => {
+  sidebarOpen.value = !sidebarOpen.value
+}
+
+const handleDashboard = () => {
+  router.push('/dashboard')
+}
+
+const navigate = async (route) => {
+  const token = localStorage.getItem('token')
+  console.log("Token being sent:", token)
+
+  try {
+    const response = await axios.get(`http://localhost:8000${route}`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+    router.push(route)
+  } catch (error) {
+    if (error.response && error.response.status === 403) {
+      alert("شما دسترسی لازم را ندارید.")
+    } else {
+      alert(error.response.status)
+    }
   }
-  
-  .button-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 192px);
-    grid-template-rows: repeat(2, 100px);
-    gap: 1.5rem;
-  }
-  
-  .button-grid button {
-    width: 100%;
-    height: 100%;
-    font-size: 1.5rem;
-    font-weight: bold;
-    border: none;
-    border-radius: 12px;
-    background-color: #002f6c;
-    color: white;
-    cursor: pointer;
-    padding: 0.5rem;
-    transition: background-color 0.3s;
-    text-align: center;
-    line-height: 1.5;
-  }
-  
-  .button-grid button:hover {
-    background-color: #f26522;
-    transform: translateY(-2px);
-    box-shadow: 0 8px 16px rgba(242, 101, 34, 0.4);
-  }
-  
-  .welcome-text h1 {
-    font-size: 2.2rem;
-    color: #002f6c;
-    max-width: 280px;
-    text-align: center;
-  }
-  </style>
-  
+}
+</script>
+
+<style scoped>
+/* کلاس برای دکمه فعال */
+
+
+/* باقی استایل‌ها */
+</style>

@@ -2,15 +2,15 @@ export default {
     buttons: [
       {
         key: 'accessDatabase',
-        label: 'دسترسی به پایگاه',
-        route: '/access-db',
+        label: 'دسترسی به پایگاه داده',
+        route: '/access_db',
         enabled: true
       },
       {
         key: 'manageData',
-        label: 'مدیریت داده',
-        route: '/manage-data',
-        enabled: false
+        label: 'اکسپورت داده',
+        route: '/manage_data',
+        enabled: true
       },
       {
         key: 'viewReports',
@@ -21,7 +21,7 @@ export default {
       {
         key: 'accessKnowledgeBase',
         label: 'دسترسی به پایگاه دانش',
-        route: '/access-kb',
+        route: '/access_kb',
         enabled: true
       }
     ]

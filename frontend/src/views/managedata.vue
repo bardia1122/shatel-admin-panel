@@ -67,6 +67,7 @@
 import { ref, watch, onMounted } from "vue";
 import config from "../config/featureConfig";
 import { useRouter, useRoute } from "vue-router";
+import axios from "axios";
 
 const startDate = ref("");
 const endDate = ref("");
@@ -150,9 +151,25 @@ const handleLogout = () => {
   window.location.href = "/login";
 };
 
-const navigate = (route) => {
-  router.push(route);
-};
+const navigate = async (route) => {
+  const token = localStorage.getItem('token')
+  console.log("Token being sent:", token)
+
+  try {
+    const response = await axios.get(`http://localhost:8000${route}`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+    router.push(route)
+  } catch (error) {
+    if (error.response && error.response.status === 403) {
+      alert("شما دسترسی لازم را ندارید.")
+    } else {
+      alert(error.response.status)
+    }
+  }
+}
 
 const handleDashboard = () => {
   router.push("/dashboard");

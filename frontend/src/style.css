@@ -351,3 +351,16 @@ button.active {
   color: white;
   border-color: #f26522;
 }
+
+.upload-area {
+  border: 2px dashed #f26522;
+  padding: 2rem;
+  border-radius: 12px;
+  text-align: center;
+  color: #ccc;
+  margin-bottom: 1.5rem;
+  cursor: pointer;
+}
+.upload-area:hover {
+  background-color: #2d2d2d;
+}

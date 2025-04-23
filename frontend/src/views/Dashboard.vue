@@ -19,13 +19,12 @@
       </transition>
     </div>
 
-    <!-- Main content -->
     <div class="main-content">
-      <h1>{{ greetingMessage }}</h1> <!-- نمایش پیام خوشامدگویی -->
+      <h1>{{ greetingMessage }}</h1>
     </div>
     
     <div class="main-content">
-      <h2>به پنل ادمین خوش آمدید</h2> <!-- نمایش پیام خوشامدگویی -->
+      <h2>به پنل ادمین خوش آمدید</h2>
     </div>
   </div>
 </template>
@@ -93,9 +92,3 @@ const navigate = async (route) => {
 }
 </script>
 
-<style scoped>
-/* کلاس برای دکمه فعال */
-
-
-/* باقی استایل‌ها */
-</style>

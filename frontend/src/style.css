@@ -26,6 +26,7 @@ body {
   min-height: 100vh;
   box-sizing: border-box;
   font-family: 'IranSans', sans-serif;
+  background-color: #242424;
 }
 
 a {
@@ -41,6 +42,7 @@ a:hover {
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
+  color: #f0f0f0;
 }
 
 button {
@@ -51,6 +53,7 @@ button {
   font-weight: 500;
   font-family: inherit;
   background-color: #1a1a1a;
+  color: #f0f0f0;
   cursor: pointer;
   transition: border-color 0.25s, background-color 0.2s;
 }
@@ -66,18 +69,20 @@ button:focus-visible {
 
 .card {
   padding: 2em;
+  background-color: #1e1e1e;
+  color: #f0f0f0;
 }
 
 @media (prefers-color-scheme: light) {
   :root {
-    color: #213547;
-    background-color: #ffffff;
+    color: #f0f0f0;
+    background-color: #242424;
   }
   a:hover {
     color: #747bff;
   }
   button {
-    background-color: #f9f9f9;
+    background-color: #1a1a1a;
   }
 }
 
@@ -100,8 +105,6 @@ button:focus-visible {
   flex-direction: column;
   align-items: center;
   padding-top: 1rem;
-  /* padding-left: 1rem;
-  padding-right: 1rem; */
 }
 
 .sidebar.collapsed {
@@ -123,9 +126,11 @@ button:focus-visible {
   width: 100%;
   padding: 0 1rem;
 }
+
 .button-selected button {
   padding: auto;
 }
+
 .button-list button {
   background-color: #2d2d2d;
   color: white;
@@ -138,7 +143,6 @@ button:focus-visible {
   cursor: pointer;
   transition: background-color 0.2s ease;
 }
-
 
 .button-list button:hover {
   background-color: #f26522;
@@ -165,11 +169,11 @@ button:focus-visible {
   align-items: center;
   height: 100vh;
   width: 100vw;
-  background: linear-gradient(to bottom right, #000000, #ff6600);
+  background: linear-gradient(to bottom right, #000000 25%, #ff6600);
 }
 
 .login-card {
-  background: white;
+  background: #1e1e1e;
   padding: 3rem 4rem;
   border-radius: 16px;
   box-shadow: 0 12px 35px rgba(0, 0, 0, 0.25);
@@ -179,35 +183,38 @@ button:focus-visible {
   text-align: center;
   box-sizing: border-box;
 }
-/* .login-card * {
-  box-sizing: border-box;
-} */
+
 .login-card h2 {
   margin-bottom: 2.5rem;
   font-size: 1.8rem;
-  color: #2c2c2c;
+  color: #f0f0f0;
 }
+
 .login-card label {
-  color: #000000;
+  color: #f0f0f0;
   font-size: 1.1rem;
-  margin-bottom: 0.5rem; /* فاصله بین برچسب و ورودی */
-  display: block; /* Ensure the label is a block element */
-  text-align: right; /* Align text to the right */
+  margin-bottom: 0.5rem;
+  display: block;
+  text-align: right;
 }
+
 .login-card input {
   box-sizing: border-box;
   width: 100%;
   padding: 1rem;
   margin-bottom: 1.5rem;
   border-radius: 10px;
-  border: 1px solid #ccc;
+  border: 1px solid #444;
   font-size: 1.2rem;
   font-family: 'IranSans', sans-serif;
   transition: border-color 0.3s;
+  background-color: #2d2d2d;
+  color: #f0f0f0;
 }
 
 .login-card input::placeholder {
   font-family: 'IranSans', sans-serif;
+  color: #888;
 }
 
 .login-card input:focus {
@@ -218,7 +225,7 @@ button:focus-visible {
 .login-card button {
   width: 100%;
   padding: 1rem;
-  background: #000000;
+  background: #2d2d2d;
   color: white;
   font-size: 1rem;
   font-weight: normal;
@@ -234,7 +241,7 @@ button:focus-visible {
 
 .error {
   margin-top: 1rem;
-  color: red;
+  color: #ff4444;
   font-size: 1.1rem;
 }
 
@@ -255,7 +262,7 @@ button:focus-visible {
 }
 
 .card {
-  background-color: white;
+  background-color: #1e1e1e;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   padding: 20px;
@@ -264,7 +271,7 @@ button:focus-visible {
 }
 
 h2 {
-  color: #333;
+  color: #f0f0f0;
   font-size: 1.5em;
   margin-bottom: 20px;
 }
@@ -305,7 +312,7 @@ h2 {
 }
 
 .input-group {
-  margin-bottom: 2rem; /* افزایش فاصله عمودی بین هر بخش */
+  margin-bottom: 2rem;
   text-align: right;
   display: flex;
   flex-direction: column;
@@ -314,12 +321,15 @@ h2 {
 .input-group label {
   color: #f0f0f0;
   font-size: 1.1rem;
-  margin-bottom: 0.5rem; /* فاصله بین برچسب و ورودی */
+  margin-bottom: 0.5rem;
 }
 
 .input-group input {
-  padding: 0.8rem; /* کمی padding برای ورودی‌ها */
-  margin-bottom: 1rem; /* فاصله عمودی ورودی‌ها */
+  padding: 0.8rem;
+  margin-bottom: 1rem;
+  background-color: #2d2d2d;
+  color: #f0f0f0;
+  border: 1px solid #444;
 }
 
 .export-button {
@@ -346,6 +356,7 @@ h2 {
 .button-list .active {
   background-color: #f26522;
 }
+
 button.active {
   background-color: #f26522;
   color: white;
@@ -360,7 +371,9 @@ button.active {
   color: #ccc;
   margin-bottom: 1.5rem;
   cursor: pointer;
+  background-color: #1e1e1e;
 }
+
 .upload-area:hover {
   background-color: #2d2d2d;
 }

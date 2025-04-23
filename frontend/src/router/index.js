@@ -3,7 +3,7 @@ import Login from '../views/Login.vue'
 import Dashboard from '../views/Dashboard.vue'
 import managedata from '../views/managedata.vue'
 import accesskb from '../views/accesskb.vue'
-const AccessDB = { template: '<h2>دسترسی به پایگاه</h2>' }
+import accessdb from '../views/accessdb.vue'
 
 const Logs = { template: '<h2>گزارش و تاریخچه</h2>' }
 
@@ -11,7 +11,7 @@ const routes = [
   { path: '/', redirect: '/login' },
   { path: '/login', component: Login },
   { path: '/dashboard', component: Dashboard },
-  { path: '/access_db', component: AccessDB },
+  { path: '/access_db', component: accessdb },
   { path: '/manage_data', component: managedata },
   { path: '/logs', component: Logs },
   { path: '/access_kb', component: accesskb }

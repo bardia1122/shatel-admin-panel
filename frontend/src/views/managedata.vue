@@ -65,9 +65,10 @@
 
 <script setup>
 import { ref, watch, onMounted } from "vue";
-import config from "../config/featureConfig";
 import { useRouter, useRoute } from "vue-router";
 import axios from "axios";
+import { getFeatureConfig } from '../config/featureConfig'
+import { getTokenPermissions } from '../auth'
 
 const startDate = ref("");
 const endDate = ref("");
@@ -78,8 +79,10 @@ const persistKey = "export_dates";
 const sidebarOpen = ref(true);
 const router = useRouter();
 const route = useRoute();
-const currentRoute = route.path; // Get the current route path
-const buttons = config.buttons.filter((btn) => btn.enabled);
+const currentRoute = route.path;
+
+const permissions = getTokenPermissions()
+const { buttons } = getFeatureConfig(permissions)
 
 onMounted(() => {
   const saved = localStorage.getItem(persistKey);

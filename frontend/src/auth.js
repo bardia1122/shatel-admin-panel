@@ -19,14 +19,15 @@ export const useAuth = () => {
     };
   };
 
-export function getTokenPermissions() {
-  const token = localStorage.getItem('token')
-  if (!token) return []
-  try {
-    const payload = JSON.parse(atob(token.split('.')[1]))
-    console.log(payload.permissions)
-    return payload.permissions || []
-  } catch {
-    return []
+  export function getTokenPermissions() {
+    const token = localStorage.getItem('token')
+    if (!token) return []
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]))
+      return payload.permissions || []
+    } catch (err) {
+      console.error("Failed to decode token:", err)
+      return []
+    }
   }
-}
+  

@@ -61,7 +61,8 @@
   
   <script setup>
   import { ref } from "vue";
-  import config from "../config/featureConfig";
+  import { getFeatureConfig } from '../config/featureConfig'
+  import { getTokenPermissions } from '../auth'
   import { useRouter, useRoute } from "vue-router";
   import axios from 'axios'
 
@@ -73,7 +74,8 @@
   const router = useRouter();
   const route = useRoute();
   const currentRoute = route.path;
-  const buttons = config.buttons.filter((btn) => btn.enabled);
+  const permissions = getTokenPermissions()
+  const { buttons } = getFeatureConfig(permissions)
   
   const handleFileChange = (event) => {
     file.value = event.target.files[0];

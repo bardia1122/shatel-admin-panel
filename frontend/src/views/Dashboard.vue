@@ -32,12 +32,17 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import config from '../config/featureConfig'
+
 import axios from 'axios'
+import { getFeatureConfig } from '../config/featureConfig'
+import { getTokenPermissions } from '../auth'
+
+const permissions = getTokenPermissions()
+const { buttons } = getFeatureConfig(permissions)
 
 const router = useRouter()
 const sidebarOpen = ref(true)
-const buttons = config.buttons.filter(btn => btn.enabled)
+
 
 const greetingMessage = ref('')
 

@@ -24,8 +24,9 @@
         <div class="export-card">
           <h2>دسترسی به پایگاه داده</h2>
           <p>برای بروزرسانی دیتابیس روی دکمه زیر کلیک کنید</p>
-          <button @click="updateDatabase" class="export-button">
-            بروزرسانی دیتابیس
+          <button @click="updateDatabase" class="export-button" :disabled="loading">
+            <span v-if="loading" class="spinner"></span>
+            <span v-else>بروزرسانی دیتابیس</span>
           </button>
   
           <div v-if="message" :class="['message', messageType]" style="margin-top: 1.5rem;">
@@ -46,6 +47,7 @@
   const sidebarOpen = ref(true)
   const message = ref('')
   const messageType = ref('success')
+  const loading = ref(false) // Loading state
   const router = useRouter()
   const route = useRoute()
   const currentRoute = route.path
@@ -53,8 +55,10 @@
   const { buttons } = getFeatureConfig(permissions)
   
   const updateDatabase = async () => {
+    loading.value = true // Start loading
+    message.value = '' // Clear the message when the process starts
     try {
-      const response = await axios.post('http://localhost:8000/update-database', {}, {
+      const response = await axios.get('http://localhost:8000/access_db/send', {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
@@ -65,6 +69,8 @@
       message.value = 'خطا در بروزرسانی دیتابیس'
       messageType.value = 'error'
       console.error('Error:', error)
+    } finally {
+      loading.value = false // Stop loading
     }
   }
   
@@ -100,3 +106,26 @@
     router.push("/dashboard")
   }
   </script>
+
+  <style>
+  /* Add spinner styles */
+  .spinner {
+    border: 2px solid #f3f3f3;
+    border-top: 2px solid #3498db;
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
+    animation: spin 1s linear infinite;
+    display: inline-block;
+    margin-right: 8px;
+  }
+  
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  </style>

@@ -27,7 +27,7 @@
       <h2>به پنل ادمین خوش آمدید</h2>
     </div>
     <div class="chart-container">
-      <h2>نمودار فعالیت کاربران</h2>
+      <h2>نمودار کاربران فعال</h2>
       <canvas ref="chartCanvas"></canvas>
     </div>
   </div>

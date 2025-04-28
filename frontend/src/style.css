@@ -142,7 +142,9 @@ button:focus-visible {
   border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.2s ease;
+  white-space: nowrap;
 }
+
 
 .button-list button:hover {
   background-color: #f26522;
@@ -384,6 +386,10 @@ button.active {
   padding: 1rem;
   border-radius: 16px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .chart-container h2 {
@@ -391,3 +397,4 @@ button.active {
   text-align: center;
   margin-bottom: 1rem;
 }
+

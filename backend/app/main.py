@@ -2,7 +2,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app import auth, users
-from .routers import manage_data, access_db
+from .routers import manage_data, access_db, access_kb
 app = FastAPI()
 
 app.add_middleware(
@@ -17,3 +17,4 @@ app.include_router(auth.router)
 app.include_router(users.router)
 app.include_router(manage_data.router)
 app.include_router(access_db.router)
+app.include_router(access_kb.router)

@@ -25,6 +25,7 @@
           <h2>دسترسی به پایگاه دانش</h2>
   
           <!-- Drag and Drop File Upload -->
+
           <div
             class="upload-area"
             @dragover.prevent
@@ -37,9 +38,18 @@
           </div>
   
           <!-- Upload Button -->
+          <div class="radio-group">
+            <label>
+              <input type="radio" v-model="selectedOption" value="option1" /> اضافه کردن رکورد جدید
+            </label>
+            <label>
+              <input type="radio" v-model="selectedOption" value="option2" /> جایگزینی با رکورد های قبلی
+            </label>
+          </div>
+
           <button
             @click="uploadFile"
-            :disabled="!file || loading"
+            :disabled="!file || loading || !selectedOption"
             class="export-button"
           >
             <span v-if="!loading">بارگذاری فایل</span>
@@ -60,7 +70,7 @@
   </template>
   
   <script setup>
-  import { ref } from "vue";
+  import { ref, computed} from "vue";
   import { getFeatureConfig } from '../config/featureConfig'
   import { getTokenPermissions } from '../auth'
   import { useRouter, useRoute } from "vue-router";
@@ -76,7 +86,10 @@
   const currentRoute = route.path;
   const permissions = getTokenPermissions()
   const { buttons } = getFeatureConfig(permissions)
+  const selectedOption = ref('option1'); // گزینه اول پیش‌فرض انتخاب شده
   
+  const option1 = ref(false);
+  const option2 = ref(false);
   const handleFileChange = (event) => {
     file.value = event.target.files[0];
   };
@@ -90,9 +103,11 @@
   
   const uploadFile = async () => {
     if (!file.value) return;
-  
+  const isAnyOptionSelected = computed(() => option1.value || option2.value);
+
     const formData = new FormData();
     formData.append("file", file.value);
+    formData.append("mode", selectedOption.value === "option1" ? "append" : "replace");
   
     try {
       loading.value = true;

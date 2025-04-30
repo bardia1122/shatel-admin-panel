@@ -11,7 +11,7 @@ router = APIRouter()
 
 SECRET_KEY = "shatel-super-secret"
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 60
+ACCESS_TOKEN_EXPIRE_MINUTES = 180
 
 DB_CONFIG = {
     "dbname": "postgres",

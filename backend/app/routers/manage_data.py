@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 from pymongo import MongoClient
 import json
 import os
-
+from fastapi.responses import FileResponse
 router = APIRouter()
 
 # mongo_client = MongoClient("mongodb://admin:bank160225@172.16.1.251:27017/?authSource=admin")
@@ -44,11 +44,11 @@ def export_data(
     #             if "timestamp" in message and isinstance(message["timestamp"], datetime):
     #                 message["timestamp"] = message["timestamp"].isoformat()
 
-    # filename = f"export_{start_dt.strftime('%Y-%m-%d')}_to_{end_dt.strftime('%Y-%m-%d')}.json"
-    # filepath = os.path.join("/tmp", filename)
+    filename = f"export_{start_dt.strftime('%Y-%m-%d')}_to_{end_dt.strftime('%Y-%m-%d')}.json"
+    filepath = os.path.join("/tmp", filename)
 
-    # with open(filepath, "w") as f:
-    #     json.dump(data, f, indent=4)
+    with open(filepath, "w", encoding="utf-8") as f:
+        json.dump(_data, f, ensure_ascii=False, indent=4)
 
     #return {"status": "success", "filename": filename}
-    return {"status": "success", "filename": "helo"}
+    return FileResponse(path=filepath, filename=filename, media_type='application/json')

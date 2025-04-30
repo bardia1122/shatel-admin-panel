@@ -118,8 +118,7 @@ const handleExport = async () => {
     loading.value = true;
     message.value = "";
 
-    const token =
-      localStorage.getItem("access_token") || localStorage.getItem("token");
+    const token = localStorage.getItem("access_token") || localStorage.getItem("token");
     const res = await fetch("http://localhost:8000/manage_data/export", {
       method: "POST",
       headers: {
@@ -128,14 +127,25 @@ const handleExport = async () => {
       body: formData,
     });
 
-    const result = await res.json();
-    loading.value = false;
-
     if (!res.ok) {
-      throw new Error(result.detail || "صدور ناموفق بود");
+      const errorResult = await res.json();
+      throw new Error(errorResult.detail || "صدور ناموفق بود");
     }
 
-    message.value = `صادر شد! فایل: ${result.filename}`;
+    const blob = await res.blob();
+    const downloadUrl = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = downloadUrl;
+
+    // نام فایل از Content-Disposition بگیریم یا اسم پیش‌فرض بدیم
+    a.download = `export_${startDate.value}_to_${endDate.value}.json`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    window.URL.revokeObjectURL(downloadUrl);
+
+    loading.value = false;
+    message.value = "داده‌ها با موفقیت دانلود شدند!";
     success.value = true;
   } catch (err) {
     loading.value = false;
@@ -143,6 +153,7 @@ const handleExport = async () => {
     success.value = false;
   }
 };
+
 
 const toggleSidebar = () => {
   sidebarOpen.value = !sidebarOpen.value;

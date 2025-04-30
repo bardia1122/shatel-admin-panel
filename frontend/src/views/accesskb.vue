@@ -23,6 +23,21 @@
       <div class="main-content">
         <div class="export-card">
           <h2>دسترسی به پایگاه دانش</h2>
+          <!-- انتخاب یا افزودن پایگاه دانش -->
+            <div class="input-group">
+              <label for="kbSelect">انتخاب پایگاه دانش:</label>
+              <select id="kbSelect" v-model="selectedKB" class="custom-select">
+                <option disabled value="">یکی را انتخاب کنید</option>
+                <option v-for="kb in kbList" :key="kb">{{ kb }}</option>
+              </select>
+            </div>
+
+            <div class="input-group">
+              <label for="newKB">افزودن پایگاه دانش جدید:</label>
+              <input id="newKB" v-model="newKB" placeholder="نام پایگاه دانش جدید را وارد کنید" />
+              <button @click="addKB" class="export-button mt-2">افزودن</button>
+            </div>
+
   
           <!-- Drag and Drop File Upload -->
 
@@ -173,6 +188,19 @@
   const handleDashboard = () => {
     router.push("/dashboard");
   };
+  const selectedKB = ref("");
+const newKB = ref("");
+const kbList = ref(["دانش ۱", "دانش ۲"]); // این لیست بعداً باید از بک‌اند بیاد
+
+const addKB = () => {
+  const trimmed = newKB.value.trim();
+  if (trimmed && !kbList.value.includes(trimmed)) {
+    kbList.value.push(trimmed);
+    selectedKB.value = trimmed;
+    newKB.value = "";
+  }
+};
+
   </script>
   
 

@@ -1,10 +1,5 @@
-ID,Name,Age,Email
-John Doe,28,john.doe@example.com,
-Jane Smith,34,jane.smith@example.com,
-Alice Johnson,25,alice.johnson@example.com,
-Bob Brown,40,bob.brown@example.com,
-8,Ali,25,ali@example.com
-9,Zahra,30,zahra@example.com
-10,Mohammad,22,mohammad@example.com
-11,Fatemeh,28,fatemeh@example.com
-12,Reza,35,reza@example.com
+id,Name,Age,Email
+1,John Doe,28,john.doe@example.com,
+2,Jane Smith,34,jane.smith@example.com,
+3,Alice Johnson,25,alice.johnson@example.com,
+4,Bob Brown,40,bob.brown@example.com

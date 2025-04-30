@@ -38,94 +38,78 @@
   </template>
   
   <script setup>
-  import { ref } from 'vue'
-  import { getFeatureConfig } from '../config/featureConfig'
-  import { getTokenPermissions } from '../auth'
-  import { useRouter, useRoute } from 'vue-router'
-  import axios from 'axios'
-  
-  const sidebarOpen = ref(true)
-  const message = ref('')
-  const messageType = ref('success')
-  const loading = ref(false) // Loading state
-  const router = useRouter()
-  const route = useRoute()
-  const currentRoute = route.path
-  const permissions = getTokenPermissions()
-  const { buttons } = getFeatureConfig(permissions)
-  
-  const updateDatabase = async () => {
-    loading.value = true // Start loading
-    message.value = '' // Clear the message when the process starts
-    try {
-      const response = await axios.get('http://localhost:8000/access_db/send', {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      })
-      message.value = 'دیتابیس با موفقیت بروزرسانی شد'
-      messageType.value = 'success'
-    } catch (error) {
-      message.value = 'خطا در بروزرسانی دیتابیس'
-      messageType.value = 'error'
-      console.error('Error:', error)
-    } finally {
-      loading.value = false // Stop loading
-    }
-  }
-  
-  const toggleSidebar = () => {
-    sidebarOpen.value = !sidebarOpen.value
-  }
-  
-  const handleLogout = () => {
-    localStorage.removeItem("access_token")
-    localStorage.removeItem("token")
-    window.location.href = "/login"
-  }
-  
-  const navigate = async (route) => {
-    const token = localStorage.getItem('token')
-    try {
-      const response = await axios.get(`http://localhost:8000${route}`, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
-      router.push(route)
-    } catch (error) {
-      if (error.response && error.response.status === 403) {
-        alert("شما دسترسی لازم را ندارید.")
-      } else {
-        alert(error.response.status)
+import { ref } from 'vue'
+import { getFeatureConfig } from '../config/featureConfig'
+import { getTokenPermissions } from '../auth'
+import { useRouter, useRoute } from 'vue-router'
+import axios from 'axios'
+
+const sidebarOpen = ref(true)
+const message = ref('')
+const messageType = ref('success')
+const loading = ref(false) // Loading state
+const router = useRouter()
+const route = useRoute()
+const currentRoute = route.path
+const permissions = getTokenPermissions()
+const { buttons } = getFeatureConfig(permissions)
+
+const updateDatabase = async () => {
+  loading.value = true // Start loading
+  message.value = '' // Clear the message when the process starts
+  try {
+    const response = await axios.get('http://localhost:8000/access_db/send', {
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
       }
+    })
+    // Display the returned message from the backend
+    const backendMessage = response.data.response || 'دیتابیس با موفقیت بروزرسانی شد'
+    message.value = backendMessage
+    messageType.value = 'success'
+  } catch (error) {
+    message.value = 'خطا در بروزرسانی دیتابیس'
+    messageType.value = 'error'
+    console.error('Error:', error)
+  } finally {
+    loading.value = false // Stop loading
+  }
+}
+
+const toggleSidebar = () => {
+  sidebarOpen.value = !sidebarOpen.value
+}
+
+const handleLogout = () => {
+  localStorage.removeItem("access_token")
+  localStorage.removeItem("token")
+  window.location.href = "/login"
+}
+
+const navigate = async (route) => {
+  const token = localStorage.getItem('token')
+  try {
+    const response = await axios.get(`http://localhost:8000${route}`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+    router.push(route)
+  } catch (error) {
+    if (error.response && error.response.status === 403) {
+      alert("شما دسترسی لازم را ندارید.")
+    } else {
+      alert(error.response.status)
     }
   }
-  
-  const handleDashboard = () => {
-    router.push("/dashboard")
-  }
+}
+
+const handleDashboard = () => {
+  router.push("/dashboard")
+}
   </script>
 
   <style>
   /* Add spinner styles */
-  .spinner {
-    border: 2px solid #f3f3f3;
-    border-top: 2px solid #3498db;
-    border-radius: 50%;
-    width: 16px;
-    height: 16px;
-    animation: spin 1s linear infinite;
-    display: inline-block;
-    margin-right: 8px;
-  }
-  
-  @keyframes spin {
-    0% {
-      transform: rotate(0deg);
-    }
-    100% {
-      transform: rotate(360deg);
-    }
-  }
+
   </style>

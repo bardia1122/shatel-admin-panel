@@ -1,6 +1,13 @@
 from fastapi import APIRouter, UploadFile, File, Form, HTTPException
 import pandas as pd
 import os
+from ..classes import KB
+import json
+from ..postgres_database import add_kb_to_db
+from ..postgres_database import get_all_kb
+from app.deps import get_current_user
+from fastapi import Depends
+from pydantic import BaseModel
 
 router = APIRouter()
 DATA_FILE_PATH = "C:/Programs/Admin Panel/data.csv"
@@ -30,3 +37,28 @@ async def upload_file(file: UploadFile = File(...), mode: str = Form(...)):
 
     result_df.to_csv(DATA_FILE_PATH, index=False)
     return {"filename": "data.csv", "msg": "آپلود و به‌روزرسانی موفقیت‌آمیز بود."}
+
+
+class KBRequest(BaseModel):
+    name: str
+
+
+
+@router.post("/access_kb/add")
+async def add_kb(kb_data: KBRequest, user=Depends(get_current_user)):
+    role = user.get("roles", [None])[0]
+    new_kb = KB(name=kb_data.name, role=role)
+    add_kb_to_db(new_kb)
+    return {"msg": "Knowledge base entry added successfully."}
+
+
+@router.get("/access_kb/get_all")
+async def get_kbs(user=Depends(get_current_user)):
+    try:
+        role = user.get("roles", [None])[0]
+        print(role)
+        kbs = get_all_kb(role)
+        return {"kbs": kbs}
+    except Exception as e:
+        print(e)
+        raise HTTPException(status_code=500, detail=str(e))

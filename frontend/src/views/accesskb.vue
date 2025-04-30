@@ -85,6 +85,7 @@
   </template>
   
   <script setup>
+  import { onMounted } from "vue";
   import { ref, computed} from "vue";
   import { getFeatureConfig } from '../config/featureConfig'
   import { getTokenPermissions } from '../auth'
@@ -123,6 +124,7 @@
     const formData = new FormData();
     formData.append("file", file.value);
     formData.append("mode", selectedOption.value === "option1" ? "append" : "replace");
+    formData.append("kb", selectedKB.value);
   
     try {
       loading.value = true;
@@ -190,14 +192,47 @@
   };
   const selectedKB = ref("");
 const newKB = ref("");
-const kbList = ref(["دانش ۱", "دانش ۲"]); // این لیست بعداً باید از بک‌اند بیاد
 
-const addKB = () => {
+const kbList = ref([]);
+const fetchKBs = async () => {
+  try {
+    const token = localStorage.getItem("token");
+    const res = await axios.get("http://localhost:8000/access_kb/get_all", {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    kbList.value = res.data.kbs.map(kb => kb.name) || [];
+  } catch (err) {
+    console.error("Error loading KBs:", err);
+  }
+};
+onMounted(() => {
+  fetchKBs();
+});
+
+
+const addKB = async () => {
   const trimmed = newKB.value.trim();
-  if (trimmed && !kbList.value.includes(trimmed)) {
-    kbList.value.push(trimmed);
+  if (!trimmed || kbList.value.includes(trimmed)) return;
+
+  try {
+    const token = localStorage.getItem("token");
+    await axios.post(
+      "http://localhost:8000/access_kb/add",
+      { name: trimmed },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    await fetchKBs();
     selectedKB.value = trimmed;
     newKB.value = "";
+  } catch (err) {
+    console.error("Error adding KB:", err);
+    alert("خطا در افزودن پایگاه دانش");
   }
 };
 

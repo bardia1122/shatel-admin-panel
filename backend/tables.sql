@@ -7,3 +7,9 @@ CREATE TABLE users (
 );
 
 drop Table users
+
+CREATE TABLE kbs (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100) UNIQUE NOT NULL,
+    role VARCHAR(50) NOT NULL 
+);

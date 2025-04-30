@@ -21,10 +21,10 @@ def export_data(
         start_dt = datetime.strptime(start_date, "%Y-%m-%d")
         end_dt = datetime.strptime(end_date, "%Y-%m-%d") + timedelta(days=1) - timedelta(seconds=1)
     except ValueError:
-        raise HTTPException(status_code=400, detail="Invalid date format. Use YYYY-MM-DD")
+        raise HTTPException(status_code=400, detail="فرمت تاریخ اشتباه است!")
 
     if start_dt > end_dt:
-        raise HTTPException(status_code=400, detail="Start date must be before or equal to end date")
+        raise HTTPException(status_code=400, detail="تاریخ شروع نمیتواند بعد از تاریخ پایان باشد!")
 
     query = {
         "messages.timestamp": {
@@ -36,7 +36,7 @@ def export_data(
     _data = [{"id": 1, "user": "hello"}]
     data = json.dumps(_data)
     if not data:
-        raise HTTPException(status_code=404, detail="No data found for the given date range")
+        raise HTTPException(status_code=404, detail="هیچ داده ای در تاریخ خواسته شده یافت نشد!")
 
     # for doc in data:
     #     if "messages" in doc:

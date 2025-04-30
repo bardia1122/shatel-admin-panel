@@ -6,20 +6,12 @@ from datetime import datetime, timedelta
 import psycopg2
 import json
 from app.postgres_database import add_user
-
+from .postgres_database import get_user_from_db
 router = APIRouter()
 
 SECRET_KEY = "shatel-super-secret"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 180
-
-DB_CONFIG = {
-    "dbname": "postgres",
-    "user": "myuser",
-    "password": "mypassword",
-    "host": "localhost",
-    "port": "5432"
-}
 
 def create_access_token(data: dict):
     to_encode = data.copy()
@@ -27,28 +19,9 @@ def create_access_token(data: dict):
     to_encode.update({"exp": expire})
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
 
-def get_user_from_db(username: str):
-    conn = psycopg2.connect(**DB_CONFIG)
-    cur = conn.cursor()
-    try:
-        cur.execute("SELECT username, password, role, permissions FROM users WHERE username = %s", (username,))
-        row = cur.fetchone()
-        if row:
-            return {
-                "username": row[0],
-                "hashed_password": row[1],
-                "roles": [row[2]],
-                "permissions": json.loads(row[3])
-            }
-    finally:
-        cur.close()
-        conn.close()
-    return None
-
 @router.post("/login")
 def login(username: str = Form(...), password: str = Form(...)):
     user = get_user_from_db(username)
-    print(user)
     if not user or not bcrypt.verify(password, user["hashed_password"]):
         raise HTTPException(status_code=401, detail="Invalid credentials")
     
@@ -59,6 +32,7 @@ def login(username: str = Form(...), password: str = Form(...)):
     })
     print(user["permissions"])
     return JSONResponse(content={"access_token": token, "token_type": "bearer"})
+
 @router.post("/register")
 def register(
     username: str = Form(...),

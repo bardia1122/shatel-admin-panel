@@ -267,12 +267,16 @@ button:focus-visible {
 }
 
 .card {
+  flex: 1;
   background-color: #1e1e1e;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   padding: 20px;
+  min-width: 300px;
   width: 400px;
   text-align: center;
+  border-radius: 12px;
+
 }
 
 h2 {
@@ -455,3 +459,21 @@ button.active {
 }
 
 
+.two-cards {
+  display: flex;
+  gap: 45px;
+  flex-wrap: wrap;
+}
+
+
+
+.left-card {
+  min-height: 53.9%;
+  max-width: 40%;
+}
+
+.right-card {
+  min-height: 50%;
+  max-width: 40%;
+  flex: 1;
+}

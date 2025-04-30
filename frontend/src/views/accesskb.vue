@@ -18,69 +18,76 @@
           </div>
         </transition>
       </div>
-  
-      <!-- Main Content -->
-      <div class="main-content">
-        <div class="export-card">
-          <h2>دسترسی به پایگاه دانش</h2>
-          <!-- انتخاب یا افزودن پایگاه دانش -->
-            <div class="input-group">
-              <label for="kbSelect">انتخاب پایگاه دانش:</label>
-              <select id="kbSelect" v-model="selectedKB" class="custom-select">
-                <option disabled value="">یکی را انتخاب کنید</option>
-                <option v-for="kb in kbList" :key="kb">{{ kb }}</option>
-              </select>
-            </div>
 
-            <div class="input-group">
-              <label for="newKB">افزودن پایگاه دانش جدید:</label>
-              <input id="newKB" v-model="newKB" placeholder="نام پایگاه دانش جدید را وارد کنید" />
-              <button @click="addKB" class="export-button mt-2">افزودن</button>
-            </div>
+      <div class="main-content two-cards">
+    <!-- کارت سمت چپ: افزودن پایگاه دانش -->
 
-  
-          <!-- Drag and Drop File Upload -->
 
-          <div
-            class="upload-area"
-            @dragover.prevent
-            @drop.prevent="handleDrop"
-          >
-            <p v-if="!file">فایل خود را اینجا رها کنید یا کلیک کنید</p>
-            <p v-else>فایل انتخاب شده: {{ file.name }}</p>
-            <input type="file" @change="handleFileChange" hidden ref="fileInput" />
-            <button @click="$refs.fileInput.click()">انتخاب فایل</button>
-          </div>
-  
-          <!-- Upload Button -->
-          <div class="radio-group">
-            <label>
-              <input type="radio" v-model="selectedOption" value="option1" /> اضافه کردن رکورد جدید
-            </label>
-            <label>
-              <input type="radio" v-model="selectedOption" value="option2" /> جایگزینی با رکورد های قبلی
-            </label>
-          </div>
+    <!-- کارت سمت راست: انتخاب و بارگذاری -->
+    <div class="card right-card">
+      <h2>دسترسی به پایگاه دانش</h2>
 
-          <button
-            @click="uploadFile"
-            :disabled="!file || loading || !selectedOption"
-            class="export-button"
-          >
-            <span v-if="!loading">بارگذاری فایل</span>
-            <span v-else>در حال بارگذاری...</span>
-          </button>
-  
-          <!-- Message -->
-          <p
-            v-if="message"
-            :class="{ 'text-green-500': success, 'text-red-500': !success }"
-            class="text-center text-sm font-medium mt-4"
-          >
-            {{ message }}
-          </p>
-        </div>
+      <div class="input-group">
+        <label for="kbSelect">انتخاب پایگاه دانش:</label>
+        <select id="kbSelect" v-model="selectedKB" class="custom-select">
+          <option disabled value="">یکی را انتخاب کنید</option>
+          <option v-for="kb in kbList" :key="kb">{{ kb }}</option>
+        </select>
       </div>
+
+      <div
+        class="upload-area"
+        @dragover.prevent
+        @drop.prevent="handleDrop"
+      >
+        <p v-if="!file">فایل خود را اینجا رها کنید یا کلیک کنید</p>
+        <p v-else>فایل انتخاب شده: {{ file.name }}</p>
+        <input type="file" @change="handleFileChange" hidden ref="fileInput" />
+        <button @click="$refs.fileInput.click()">انتخاب فایل</button>
+      </div>
+
+      <div class="radio-group">
+        <label>
+          <input type="radio" v-model="selectedOption" value="option1" /> اضافه کردن رکورد جدید
+        </label>
+        <label>
+          <input type="radio" v-model="selectedOption" value="option2" /> جایگزینی با رکورد های قبلی
+        </label>
+      </div>
+
+      <button
+        @click="uploadFile"
+        :disabled="!file || loading || !selectedOption"
+        class="export-button"
+      >
+        <span v-if="!loading">بارگذاری فایل</span>
+        <span v-else>در حال بارگذاری...</span>
+      </button>
+
+      <p
+        v-if="message"
+        :class="{ 'text-green-500': success, 'text-red-500': !success }"
+        class="text-center text-sm font-medium mt-4"
+      >
+        {{ message }}
+      </p>
+    </div>
+    <div class="card left-card">
+      <h2>افزودن پایگاه دانش</h2>
+      <div class="input-group">
+        <label for="newKB">افزودن پایگاه دانش جدید:</label>
+        <input id="newKB" v-model="newKB" placeholder="نام پایگاه دانش جدید را وارد کنید" />
+        <button @click="addKB" class="export-button mt-2">افزودن</button>
+        <p
+          v-if="add_message"
+          :class="{ 'text-green-500': success, 'text-red-500': !success }"
+          class="text-center text-sm font-medium mt-4"
+        >
+          {{ add_message }}
+        </p>
+      </div>
+    </div>
+  </div>
     </div>
   </template>
   
@@ -95,6 +102,7 @@
   const sidebarOpen = ref(true);
   const file = ref(null);
   const message = ref("");
+  const add_message = ref("")
   const success = ref(false);
   const loading = ref(false);
   const router = useRouter();
@@ -102,7 +110,7 @@
   const currentRoute = route.path;
   const permissions = getTokenPermissions()
   const { buttons } = getFeatureConfig(permissions)
-  const selectedOption = ref('option1'); // گزینه اول پیش‌فرض انتخاب شده
+  const selectedOption = ref('option1');
   
   const option1 = ref(false);
   const option2 = ref(false);
@@ -129,6 +137,7 @@
     try {
       loading.value = true;
       message.value = "";
+      
   
       const token =
         localStorage.getItem("access_token") || localStorage.getItem("token");
@@ -149,6 +158,9 @@
       }
   
       message.value = `بارگذاری موفقیت‌آمیز بود: ${result.filename || "فایل ارسال شد"}`;
+      setTimeout(() => {
+        message.value = false;
+        }, 3000);
       success.value = true;
     } catch (err) {
       console.error("Navigation error:", error)
@@ -211,6 +223,7 @@ onMounted(() => {
 
 
 const addKB = async () => {
+  add_message.value = "";
   const trimmed = newKB.value.trim();
   if (!trimmed || kbList.value.includes(trimmed)) return;
 
@@ -228,6 +241,10 @@ const addKB = async () => {
     );
 
     await fetchKBs();
+    add_message.value = `پایگاه دانش جدید ساخته شد: ${newKB.value || ""}`;
+    setTimeout(() => {
+      add_message.value = false;
+    }, 3000);
     selectedKB.value = trimmed;
     newKB.value = "";
   } catch (err) {

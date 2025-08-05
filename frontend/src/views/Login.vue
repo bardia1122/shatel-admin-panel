@@ -29,7 +29,7 @@ export default {
     async handleLogin() {
         this.error = null
         try {
-            const response = await axios.post('http://localhost:8000/login', new URLSearchParams({
+            const response = await axios.post('http://localhost:8082/auth/login', new URLSearchParams({
             username: this.username,
             password: this.password
             }))

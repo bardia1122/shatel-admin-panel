@@ -5,11 +5,11 @@ router = APIRouter()
 
 @router.get("/logs")
 def view_logs(permission = Depends(has_permission("view_logs"))):
-    return {"msg": "User Level 3 can view logs."}
+    return {"msg": "View logs"}
 
 @router.get("/access_db")
 def access_db(permission = Depends(has_permission("access_db"))):
-    return {"msg": "User can access database"}
+    return {"msg": "Access Database"}
 
 @router.get("/manage_data")
 def admin_zone(permission = Depends(has_permission("manage_data"))):
@@ -17,8 +17,8 @@ def admin_zone(permission = Depends(has_permission("manage_data"))):
 
 @router.get("/access_kb")
 def access_kb(permission = Depends(has_permission("access_kb"))):
-    return {"msg": "Access to Knowledge Base"}
+    return {"msg": "Access Knowledge Base"}
 
 @router.get("/dashboard")
-def access_kb():
+def dashboard():
     return {"msg": "Dashboard"}

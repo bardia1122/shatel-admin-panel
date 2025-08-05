@@ -1,3 +1,4 @@
+-- Active: 1754394573846@@127.0.0.1@5434@appdb
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     username VARCHAR(100) UNIQUE NOT NULL,

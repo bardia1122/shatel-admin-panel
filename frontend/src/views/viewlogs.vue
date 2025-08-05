@@ -56,7 +56,7 @@
   const navigate = async (route) => {
     const token = localStorage.getItem('token')
     try {
-      const response = await axios.get(`http://localhost:8000${route}`, {
+      const response = await axios.get(`http://localhost:8082${route}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }

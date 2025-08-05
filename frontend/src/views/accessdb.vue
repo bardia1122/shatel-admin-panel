@@ -58,7 +58,7 @@ const updateDatabase = async () => {
   loading.value = true // Start loading
   message.value = '' // Clear the message when the process starts
   try {
-    const response = await axios.get('http://localhost:8000/access_db/send', {
+    const response = await axios.get('http://localhost:8082/access_db/send', {
       headers: {
         'Authorization': `Bearer ${localStorage.getItem('token')}`
       }
@@ -89,7 +89,7 @@ const handleLogout = () => {
 const navigate = async (route) => {
   const token = localStorage.getItem('token')
   try {
-    const response = await axios.get(`http://localhost:8000${route}`, {
+    const response = await axios.get(`http://localhost:8082${route}`, {
       headers: {
         Authorization: `Bearer ${token}`
       }

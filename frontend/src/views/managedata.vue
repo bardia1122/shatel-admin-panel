@@ -119,7 +119,7 @@ const handleExport = async () => {
     message.value = "";
 
     const token = localStorage.getItem("access_token") || localStorage.getItem("token");
-    const res = await fetch("http://localhost:8000/manage_data/export", {
+    const res = await fetch("http://localhost:8082/manage_data/export", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -170,7 +170,7 @@ const navigate = async (route) => {
   console.log("Token being sent:", token)
 
   try {
-    const response = await axios.get(`http://localhost:8000${route}`, {
+    const response = await axios.get(`http://localhost:8082${route}`, {
       headers: {
         Authorization: `Bearer ${token}`
       }

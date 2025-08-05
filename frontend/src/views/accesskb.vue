@@ -142,7 +142,7 @@
       const token =
         localStorage.getItem("access_token") || localStorage.getItem("token");
   
-      const res = await fetch("http://localhost:8000/access_kb/upload", {
+      const res = await fetch("http://localhost:8082/access_kb/upload", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -184,7 +184,7 @@
   const token = localStorage.getItem('token')
   console.log("Token being sent:", token)
   try {
-    const response = await axios.get(`http://localhost:8000${route}`, {
+    const response = await axios.get(`http://localhost:8082${route}`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -209,7 +209,7 @@ const kbList = ref([]);
 const fetchKBs = async () => {
   try {
     const token = localStorage.getItem("token");
-    const res = await axios.get("http://localhost:8000/access_kb/get_all", {
+    const res = await axios.get("http://localhost:8082/access_kb/get_all", {
       headers: { Authorization: `Bearer ${token}` }
     });
     kbList.value = res.data.kbs.map(kb => kb.name) || [];
@@ -230,7 +230,7 @@ const addKB = async () => {
   try {
     const token = localStorage.getItem("token");
     await axios.post(
-      "http://localhost:8000/access_kb/add",
+      "http://localhost:8082/access_kb/add",
       { name: trimmed },
       {
         headers: {

@@ -144,7 +144,7 @@ const handleDashboard = () => {
 const navigate = async (route) => {
   const token = localStorage.getItem('token')
   try {
-    await axios.get(`http://localhost:8000${route}`, {
+    await axios.get(`http://localhost:8082${route}`, {
       headers: {
         Authorization: `Bearer ${token}`
       }

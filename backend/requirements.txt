@@ -4,3 +4,9 @@ passlib[bcrypt]
 python-jose[cryptography]
 python-multipart
 pymongo
+psycopg2
+httpx
+websockets
+pandas
+sqlalchemy
+dotenv
